@@ -12,7 +12,7 @@ class TracePacket {
 	public:
 		
 		// *** Constructors *** //
-		Packet()
+		TracePacket()
 		{
 			_type = NULL;
 			_TTL = 0;
@@ -22,7 +22,7 @@ class TracePacket {
 			_destinationPort = 0;
 		}
 		
-		Packet(string packet)
+		TracePacket(string packet)
 		{
 			vector<string> contents = this->explode(" ", packet);
 
@@ -38,7 +38,7 @@ class TracePacket {
 			
 		}
 		
-		Packet(char type, unsigned long TTL, unsigned long sourceIP, unsigned short sourcePort,
+		TracePacket(char type, unsigned long TTL, unsigned long sourceIP, unsigned short sourcePort,
 			unsigned long destinationIP, unsigned short destinationPort)
 		{
 			_type = type;
@@ -50,22 +50,22 @@ class TracePacket {
 		}
 		
 		// *** Getters & Setters *** //
-		Packet& type(char type) { _type = type; return *this; }
+		TracePacket& type(char type) { _type = type; return *this; }
 		char type() { return _type; }
 		
-		Packet& TTL(unsigned long TTL) { _TTL = TTL; return *this; }
+		TracePacket& TTL(unsigned long TTL) { _TTL = TTL; return *this; }
 		unsigned long TTL() { return _TTL; }
 
-		Packet& sourceIP(unsigned long sourceIP) { _sourceIP = sourceIP; return *this; }
+		TracePacket& sourceIP(unsigned long sourceIP) { _sourceIP = sourceIP; return *this; }
 		unsigned long sourceIP() { return _sourceIP; }
 		
-		Packet& sourcePort(unsigned short sourcePort) { _sourcePort = sourcePort; return *this; }
+		TracePacket& sourcePort(unsigned short sourcePort) { _sourcePort = sourcePort; return *this; }
 		unsigned short sourcePort() { return _sourcePort; }
 		
-		Packet& destinationIP(unsigned long destinationIP) { _destinationIP = destinationIP; return *this; }
+		TracePacket& destinationIP(unsigned long destinationIP) { _destinationIP = destinationIP; return *this; }
 		unsigned long destinationIP() { return _destinationIP; }
 		
-		Packet& destinationPort(unsigned short destinationPort) { _destinationPort = destinationPort; return *this; }
+		TracePacket& destinationPort(unsigned short destinationPort) { _destinationPort = destinationPort; return *this; }
 		unsigned short destinationPort() { return _destinationPort; }
 		
 		// *** Public Methods *** //

@@ -16,6 +16,12 @@ class Node {
 			_online = true;
 		}
 		
+		Node(string host, int port, bool online) {
+			_host = host;
+			_port = port;
+			_online = online;
+		}
+		
 		Node& host(string host) { _host = host; return *this; }
 		string host() { return _host; }
 		
