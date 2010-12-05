@@ -134,31 +134,31 @@ string getArg(string flag, char **argv) {
 
 string colorize(string text = "", string color = "") {
 	if(color.compare("black") == 0) {
-		return "\033[0;30m" + text + "\033[0m";
+		return "\033[0;30m" + text + "\033[0m\n";
 	} 
 	else if(color.compare("red") == 0) {
-		return "\033[0;31m" + text + "\033[0m";
+		return "\033[0;31m" + text + "\033[0m\n";
 	}
 	else if(color.compare("green") == 0) {
-		return "\033[0;32m" + text + "\033[0m";
+		return "\033[0;32m" + text + "\033[0m\n";
 	} 	
 	else if(color.compare("yellow") == 0) {
-		return "\033[0;33m" + text + "\033[0m";
+		return "\033[0;33m" + text + "\033[0m\n";
 	}
 	else if(color.compare("blue") == 0) {
-		return "\033[0;34m" + text + "\033[0m";
+		return "\033[0;34m" + text + "\033[0m\n";
 	}
 	else if(color.compare("pink") == 0) {
-		return "\033[0;35m" + text + "\033[0m";
+		return "\033[0;35m" + text + "\033[0m\n";
 	}
 	else if(color.compare("sky") == 0) {
-		return "\033[0;36m" + text + "\033[0m";
+		return "\033[0;36m" + text + "\033[0m\n";
 	}
 	else if(color.compare("grey") == 0) {
-		return "\033[0;37m" + text + "\033[0m";
+		return "\033[0;37m" + text + "\033[0m\n";
 	}
 	else {
-		return text;		
+		return text + "\n";		
 	}
 }
 
