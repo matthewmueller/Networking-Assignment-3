@@ -24,7 +24,7 @@ class Packet {
 		
 		Packet(string packet)
 		{
-			vector<string> contents = explode(" ", packet);
+			vector<string> contents = this->explode(" ", packet);
 
 			_type = contents.at(0).c_str()[0];
 			

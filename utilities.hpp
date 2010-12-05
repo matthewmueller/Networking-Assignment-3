@@ -49,7 +49,7 @@ string file_get_contents(string filename = "") {
 	file.open(filename.c_str());
 	
 	if(!file.is_open()) {
-		cout << "Unable to open input file" << endl;
+		cout << "file_get_contents: Unable to open input file" << endl;
 		exit(1);
 	}
 	
@@ -83,7 +83,7 @@ bool file_put_contents(string filename, string data, string mode = "truncate") {
 	}
 	
 	if(!file.is_open()) {
-		cout << "Unable to open the file" << endl;
+		cout << "file_put_contents: Unable to open the file" << endl;
 		exit(1);
 	}
 	
@@ -92,4 +92,42 @@ bool file_put_contents(string filename, string data, string mode = "truncate") {
 	file.close();
 	
 	return true;
+}
+
+string getArg(string flag, char **argv) {
+	stringstream _args;
+	
+	if(flag.size() == 1) {
+		flag = "-" + flag;
+	}
+		
+	// string sarg = "";
+	for(unsigned int i = 0; i < sizeof(argv); i++ ) {
+		_args << argv[i] << " ";
+
+	}
+	
+	string args = _args.str();
+
+	vector<string> argArray = explode(" ", args);
+	
+	// cout << "SIZE : " << argArray.size();
+	for(unsigned int i = 0; i < argArray.size(); i++) {
+		string arg = argArray.at(i);
+		if(arg.compare(flag) == 0) {
+			// cout << "Arg : " << arg << endl;
+			// cout << "Next spot : " << i+1 << endl;
+			if(argArray.at(i+1)[0] == '-' || argArray.at(i+1).empty()) {
+				return "1";
+			} else {
+				return argArray.at(i+1);
+			}
+		}
+	}
+	
+	// args << *argv;
+	
+	// cout << args.str() << endl;
+	
+	return "";
 }
