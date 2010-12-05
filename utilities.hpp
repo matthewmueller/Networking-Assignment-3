@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <sstream>
 #include <stdlib.h>
+#include <netdb.h>
 
 using namespace std;
 
@@ -162,3 +163,13 @@ string colorize(string text = "", string color = "") {
 	}
 }
 
+string getMyHost() {
+	char myHostName[255];
+	myHostName[254] = '\0';
+	gethostname(myHostName,254);
+	string hostName(myHostName);
+	int strIndex = hostName.find_first_of(".");
+	hostName = hostName.substr(0,strIndex);	
+	
+	return hostName;
+}

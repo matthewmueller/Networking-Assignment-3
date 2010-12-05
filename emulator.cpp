@@ -11,6 +11,7 @@ using namespace std;
 
 Topology topology;
 string filename = "";
+string host = "";
 int port = -1;
 
 void readtopology() {
@@ -18,11 +19,20 @@ void readtopology() {
 	topology = Topology(filename);
 }
 
+void createroutes() {
+	
+}
+
+void forwardpacket() {
+	
+}
+
 int main (int argc, char const *argv[])
 {
 	// Get args
 	filename = getArg("-f", argv);
 	port = atoi(getArg("-p", argv).c_str());
+	host = getMyHost();
 	
 	if(filename.empty()) {
 		cout << "Need to specify a filename" << endl;
@@ -34,9 +44,20 @@ int main (int argc, char const *argv[])
 	
 	// Parse and generate topology
 	readtopology();
+	cout << getMyHost() << endl;
 	
-	cout << topology.print();
+	// topology.getNode(host, port)
+	Socket listener = Socket();
+	listener.block(false);
 	
+	while(1) {
+		string response = listener.listen(port);
+		if(!response.empty()) {
+			// Handle
+		}
+		
+		createroutes();
+	}
 	
 	
 	

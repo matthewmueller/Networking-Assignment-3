@@ -1,9 +1,9 @@
-#include "Node.hpp"
+#include "node.hpp";
 #include <string>
 #include <iostream>
 #include <vector>
 #include <sstream>
-#include "utilities.hpp"
+#include "utilities.hpp";
 
 using namespace std;
 
@@ -30,14 +30,25 @@ public:
 			
 			this->add(me);
 		}
-	}	
+	};	
 	
-	Topology& add(Node n) { _nodes.push_back(n); return *this; }
+	Node getNode(string host, int port) {
+		Node n = Node(host, port);
+		for(unsigned int i = 0; i < _nodes.size(); i++) {
+			if(n.compare(_nodes.at(i)) == 0) {
+				return _nodes.at(i);
+			}
+		}
+		
+		return Node();
+	};
+	
+	Topology& add(Node n) { _nodes.push_back(n); return *this; };
 
 	Topology& disable(Node n) {
 		n.online(false);
 		return *this;
-	}
+	};
 	
 	string print() {
 		stringstream out;
@@ -47,9 +58,10 @@ public:
 		}
 		
 		return out.str();
-	}
+	};
 	
 private:	
 	vector<Node> _nodes;
 	
 };
+
