@@ -38,20 +38,21 @@ The first IP,port pair in each line of the topology file corresponds to a node w
 		   /      \      \			
 		 /         \      \		
 		1------------3----4		
+					
+		Node IP      Port
+		1    1.0.0.0  1
+		2    2.0.0.0  2
+		3    3.0.0.0  3
+		4    4.0.0.0  4
+		5    5.0.0.0  5 
 							
-Node IP      Port
-1    1.0.0.0  1
-2    2.0.0.0  2
-3    3.0.0.0  3
-4    4.0.0.0  4
-5    5.0.0.0  5 							
-Topology.txt
+		Topology.txt
 
-1.0.0.0,1 2.0.0.0,2 3.0.0.0,3
-2.0.0.0,2 1.0.0.0,1 3.0.0.0,3 5.0.0.0,5
-3.0.0.0,3 1.0.0.0,1 2.0.0.0,2 4.0.0.0,4
-4.0.0.0,4 3.0.0.0,3 5.0.0.0,5
-5.0.0.0,5 2.0.0.0,2 4.0.0.0,4
+		1.0.0.0,1 2.0.0.0,2 3.0.0.0,3
+		2.0.0.0,2 1.0.0.0,1 3.0.0.0,3 5.0.0.0,5
+		3.0.0.0,3 1.0.0.0,1 2.0.0.0,2 4.0.0.0,4
+		4.0.0.0,4 3.0.0.0,3 5.0.0.0,5
+		5.0.0.0,5 2.0.0.0,2 4.0.0.0,4
 
 The assumption after readtopology is executed is that all nodes should be "alive" and that the process of setting up the routing table should begin. readtopology only needs to be executed once when the emulator is started and the application can assume that the topology file is in the same directory in which the emulator code is running. Note that this means that the emulator knows the whole topology at the startup.
 
