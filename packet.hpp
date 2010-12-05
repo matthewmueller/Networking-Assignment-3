@@ -13,7 +13,7 @@ class Packet {
 		
 		// *** Constructors *** //
 		Packet()
-		{ 
+		{
 			_type = NULL;
 			_TTL = 0;
 			_sourceIP = 0;
@@ -69,7 +69,8 @@ class Packet {
 		unsigned short destinationPort() { return _destinationPort; }
 		
 		// *** Public Methods *** //
-		string toString() {
+		string toString() 
+		{
 			// char *packet;
 			stringstream packet("");
 			
