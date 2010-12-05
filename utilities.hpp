@@ -94,7 +94,7 @@ bool file_put_contents(string filename, string data, string mode = "truncate") {
 	return true;
 }
 
-string getArg(string flag, char **argv) {
+string getArg(string flag, char const **argv) {
 	stringstream _args;
 	
 	if(flag.size() == 1) {
