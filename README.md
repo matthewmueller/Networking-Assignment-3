@@ -76,7 +76,7 @@ Emulator
 
 The emulator will be invoked as follows:
 
- emulator -p <port> -f <filename>
+ 		emulator -p <port> -f <filename>
 port is the port that the emulator listens on for incoming packets.
 filename is the name of the topology file described above.
 Note: You might want to print some debugging information on the emulator so that if your program is not behaving as expected at the demo time we can analyze what your program does and does not do correctly.
