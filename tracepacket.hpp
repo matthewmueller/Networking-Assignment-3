@@ -7,7 +7,7 @@
 
 using namespace std;
 
-class Packet {
+class TracePacket {
 	
 	public:
 		
