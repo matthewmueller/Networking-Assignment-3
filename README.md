@@ -25,11 +25,12 @@ readtopology
 readtopology will read a text file which defines the interconnection structure of a test network that can have up to 20 nodes. The topology structure will be stored in a file and will have the following format:
 
 
-IP_a,port_w IP_b,port_x IP_c,port_y IP_d,port_z ... 
-IP_b,port_x IP_a,port_w IP_c,port_y IP_d,port_z ... 
-.
-.
-.
+			IP_a,port_w IP_b,port_x IP_c,port_y IP_d,port_z ... 
+			IP_b,port_x IP_a,port_w IP_c,port_y IP_d,port_z ... 
+			.
+			.
+			.
+			
 The first IP,port pair in each line of the topology file corresponds to a node which is running an emulator and will be listening for packets from all of the remaining IP,port pairs in the line (ie. a one-way connection to the first node from all of the other nodes). You can assume that there will be bidirectional connections to and from each node in the topology and that the topology file will be set up to reflect this. A simple example is as follows:
 
 
@@ -88,17 +89,17 @@ routetrace is an application similar to the standard routetrace which will trace
 
 This application will generate an output that traces the shortest path between the source and destination node in the network that is given to it by the command line parameters below. An instance of routetrace will be invoked as follows:
 
- trace -a <routetrace port> -b < source hostname> -c <source port> -d <destination hostname>
--e <destination port> -f <debug option>
+		 trace -a <routetrace port> -b < source hostname> -c <source port> -d <destination hostname>
+		-e <destination port> -f <debug option>
 routetrace port is the port that the routetrace listens on for incoming packets.
 routetrace will output the shortest path between the <source hostname, source port> to <destination hostname, destination port> .
 When the debug option is 1, the application will print out the following information about the packets that it sends and receives: TTL of the packet and the src. and dst. IP and port numbers. It will not do so when this option is 0.
 This is the suggested packet format for the routetrace application:
 
- --------------------------------------------------------------------------------------------
- | char | unsigned long | unsigned long | unsinged short | unsigned long   | unsigned short | 
- | Type	|  TTL          | src IP address|  src port      | dest. IP address| dest. port     | 
- --------------------------------------------------------------------------------------------
+		 --------------------------------------------------------------------------------------------
+		 | char | unsigned long | unsigned long | unsinged short | unsigned long   | unsigned short | 
+		 | Type	|  TTL          | src IP address|  src port      | dest. IP address| dest. port     | 
+		 --------------------------------------------------------------------------------------------
 More concretely here is what the routetrace application does:
 
 It gets the source and destination IP and port from the command line.
@@ -112,7 +113,9 @@ Here is what your emulator should do once it receives a routetrace packet:
 
 If TTL is 0, create a routetrace packet or modify the received routetrace packet. Put its own IP and Port to the source IP and port fields of the routetrace packet. Other fields of the packet should be identical to the packet it received. Send that back to the routetrace (using the source IP and port fields of the routetrace packet that it received)
 If TTL is not 0, decrement the TTL field in the packet. Send the altered packet to the next hop on the shortest path to the destination.
+
 Changes from Project 2
+-----------------------
 
 There will be no sender or requester involved in this project. Moreover, note that the emulator will not be tested for functions such as queuing, logging, loss percentage or delay. The emulator will read the topology file and not the table containing the routing information from project 2. It is sufficient that the emulator supports the functions described above.
 
@@ -125,17 +128,17 @@ Sample test case:
 
 Consider the above topology. If we run the routetrace application between nodes 1 and 4, here is the output that you should get:
 
-Hop#  IP, Port
-1     1.0.0.0, 1
-2     3.0.0.0, 3
-3     4.0.0.0, 4
+		Hop#  IP, Port
+		1     1.0.0.0, 1
+		2     3.0.0.0, 3
+		3     4.0.0.0, 4
 Now lets disable emulator 3 by using the command Ctrl + C. Your routes should reconfigure. Once we run the routetrace application again after a few seconds, we should get:
 
-Hop#  IP, Port
-1     1.0.0.0, 1
-2     2.0.0.0, 2
-3     5.0.0.0, 5
-4     4.0.0.0, 4
+		Hop#  IP, Port
+		1     1.0.0.0, 1
+		2     2.0.0.0, 2
+		3     5.0.0.0, 5
+		4     4.0.0.0, 4
 Your program will be tested similarly with another topology at the demo time.
 
 Submission/Demo
