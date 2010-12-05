@@ -6,9 +6,11 @@ using namespace std;
 
 class Node {
 	public:
-		Node() {}
+		Node() {
+			_online = false;
+		}
 		
-		Node(string host, unsigned short port) {
+		Node(string host, int port) {
 			_host = host;
 			_port = port;
 			_online = true;
@@ -17,8 +19,8 @@ class Node {
 		Node& host(string host) { _host = host; return *this; }
 		string host() { return _host; }
 		
-		Node& port(unsigned short port) { _port = port; return *this; }
-		unsigned short port() { return _port; }
+		Node& port(int port) { _port = port; return *this; }
+		int port() { return _port; }
 		
 		Node& online(bool online) { _online = online; return *this; }
 		bool online() { return _online; }
@@ -62,9 +64,9 @@ class Node {
 			return false;
 		}
 				
-		string printNeighbors() {
+		string print() {
 			stringstream out;
-			
+			out << "Node ( " << _host << " - " << _port << " - " << _online << " ) --> "; 
 			out << "{ ";
 			for(unsigned int i = 0; i < _neighbors.size(); i++) {
 				Node n = _neighbors.at(i);
@@ -83,7 +85,7 @@ class Node {
 		
 	private:
 		string _host;
-		unsigned short _port;
+		int _port;
 		bool _online;
 		vector<Node> _neighbors;
 };

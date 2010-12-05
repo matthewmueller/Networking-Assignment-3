@@ -1,9 +1,11 @@
 #include <string>
 #include <iostream>
-#include "topology.hpp"
-#include "utilities.hpp"
-#include "socket.hpp"
-#include "packet.hpp"
+#import "topology.hpp"
+#import "utilities.hpp"
+#import "socket.hpp"
+#import "packet.hpp"
+
+#include <vector>
 
 using namespace std;
 
@@ -13,17 +15,14 @@ int port = -1;
 
 void readtopology() {
 	
-	string contents = file_get_contents(filename);
-	
-	cout << contents;
-	
+	topology = Topology(filename);
 }
 
 int main (int argc, char const *argv[])
 {
 	// Get args
-	string filename = getArg("-f", argv);
-	int port = atoi(getArg("-p", argv).c_str());
+	filename = getArg("-f", argv);
+	port = atoi(getArg("-p", argv).c_str());
 	
 	if(filename.empty()) {
 		cout << "Need to specify a filename" << endl;
@@ -35,6 +34,11 @@ int main (int argc, char const *argv[])
 	
 	// Parse and generate topology
 	readtopology();
+	
+	cout << topology.print();
+	
+	
+	
 	
 	return 0;
 }
