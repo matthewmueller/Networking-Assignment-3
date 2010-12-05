@@ -32,11 +32,12 @@ IP_b,port_x IP_a,port_w IP_c,port_y IP_d,port_z ...
 .
 The first IP,port pair in each line of the topology file corresponds to a node which is running an emulator and will be listening for packets from all of the remaining IP,port pairs in the line (ie. a one-way connection to the first node from all of the other nodes). You can assume that there will be bidirectional connections to and from each node in the topology and that the topology file will be set up to reflect this. A simple example is as follows:
 
-        2 ----- 5			
-      /   \      \			
-    /      \      \			
-  /         \      \		
- 1------------3----4		
+
+		       2 ----- 5			
+		     /   \      \			
+		   /      \      \			
+		 /         \      \		
+		1------------3----4		
 							
 Node IP      Port
 1    1.0.0.0  1
