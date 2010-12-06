@@ -3,7 +3,8 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
-#include "utilities.hpp";
+#import "utilities.hpp";
+#import "linkstatepacket.hpp"
 
 using namespace std;
 
@@ -31,6 +32,14 @@ public:
 			this->add(me);
 		}
 	};	
+	
+	// Refresh the topology by using the Reliable Flooding algorithm
+	bool refresh() {
+		
+		
+		
+		return true;
+	}
 	
 	Node getNode(string host, int port) {
 		Node n = Node(host, port);

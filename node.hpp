@@ -4,6 +4,8 @@
 #include <sstream>
 using namespace std;
 
+class LSPacket;
+
 class Node {
 	public:
 		Node() {
@@ -31,8 +33,16 @@ class Node {
 		Node& online(bool online) { _online = online; return *this; }
 		bool online() { return _online; }
 		
+		Node& LSP(LSPacket &packet) { 
+			LSPacket *lsp = &packet;
+		
+			// lsp->id();
+		
+			return *this;
+		}
+		
 		Node& neighbor(Node neighbor) { 
-			if(!this->isNeighbor(neighbor)) {
+			if(this->isNeighbor(neighbor) < 0) {
 				_neighbors.push_back(neighbor);
 				neighbor.neighbor(*this);
 			}
@@ -58,16 +68,16 @@ class Node {
 			}
 		}
 
-		bool isNeighbor(Node neighbor) {
+		int isNeighbor(Node neighbor) {
 			for(unsigned int i = 0; i < _neighbors.size(); i++) {
 				Node n = _neighbors.at(i);
 				
 				if((n.host().compare(neighbor.host()) == 0) && (n.port() == neighbor.port())) {
-					return true;
+					return i;
 				}
 			}
 			
-			return false;
+			return -1;
 		}
 				
 		string print() {
@@ -94,4 +104,5 @@ class Node {
 		int _port;
 		bool _online;
 		vector<Node> _neighbors;
+		LSPacket* _lastPacket;
 };
