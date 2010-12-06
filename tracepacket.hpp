@@ -16,9 +16,9 @@ class TracePacket {
 		{
 			_type = NULL;
 			_TTL = 0;
-			_sourceIP = 0;
+			_sourceIP = "";
 			_sourcePort = 0;
-			_destinationIP = 0;
+			_destinationIP = "";
 			_destinationPort = 0;
 		}
 		
@@ -30,16 +30,16 @@ class TracePacket {
 			
 			_TTL = strtoul(contents.at(1).c_str(), NULL, 0);
 
-			_sourceIP = strtoul(contents.at(2).c_str(), NULL, 0);
+			_sourceIP = contents.at(2).c_str();
 			_sourcePort = atoi(contents.at(3).c_str());
 			
-			_destinationIP = strtoul(contents.at(4).c_str(), NULL, 0);
+			_destinationIP = contents.at(4).c_str();
 			_destinationPort = atoi(contents.at(5).c_str());
 			
 		}
 		
-		TracePacket(char type, unsigned long TTL, unsigned long sourceIP, unsigned short sourcePort,
-			unsigned long destinationIP, unsigned short destinationPort)
+		TracePacket(char type, int TTL, string sourceIP, int sourcePort,
+			string destinationIP, int destinationPort)
 		{
 			_type = type;
 			_TTL = TTL;
@@ -56,14 +56,14 @@ class TracePacket {
 		TracePacket& TTL(unsigned long TTL) { _TTL = TTL; return *this; }
 		unsigned long TTL() { return _TTL; }
 
-		TracePacket& sourceIP(unsigned long sourceIP) { _sourceIP = sourceIP; return *this; }
-		unsigned long sourceIP() { return _sourceIP; }
+		TracePacket& sourceIP(string sourceIP) { _sourceIP = sourceIP; return *this; }
+		string sourceIP() { return _sourceIP; }
 		
 		TracePacket& sourcePort(unsigned short sourcePort) { _sourcePort = sourcePort; return *this; }
 		unsigned short sourcePort() { return _sourcePort; }
 		
-		TracePacket& destinationIP(unsigned long destinationIP) { _destinationIP = destinationIP; return *this; }
-		unsigned long destinationIP() { return _destinationIP; }
+		TracePacket& destinationIP(string destinationIP) { _destinationIP = destinationIP; return *this; }
+		string destinationIP() { return _destinationIP; }
 		
 		TracePacket& destinationPort(unsigned short destinationPort) { _destinationPort = destinationPort; return *this; }
 		unsigned short destinationPort() { return _destinationPort; }
@@ -82,9 +82,9 @@ class TracePacket {
 	private:
 		char _type;
 		unsigned long _TTL;
-		unsigned long _sourceIP;
+		string _sourceIP;
 		unsigned short _sourcePort;
-		unsigned long _destinationIP;
+		string _destinationIP;
 		unsigned short _destinationPort;
 		
 		vector<string> explode( const string &delimiter, const string &str)
