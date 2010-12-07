@@ -1,9 +1,9 @@
-#include "node.hpp";
 #include <string>
 #include <iostream>
-#include <vector>
+#include <map>
 #include <sstream>
-#import "utilities.hpp";
+#import "utilities.hpp"
+#import "node.hpp"
 #import "linkstatepacket.hpp"
 
 using namespace std;
@@ -36,23 +36,36 @@ public:
 	// Refresh the topology by using the Reliable Flooding algorithm
 	bool refresh() {
 		
-		
-		
+		// Node firstNode;
+		// // Get first "online" node in the network
+		// for(int i = 0; i < _nodes.size(); i++) {
+		// 	firstNode = _nodes.at(i);
+		// 	if(firstNode.online()) break;
+		// }
+		// 
+		// firstNode.forwardLSP();
+		// 
 		return true;
 	}
 	
 	Node getNode(string host, int port) {
-		Node n = Node(host, port);
-		for(unsigned int i = 0; i < _nodes.size(); i++) {
-			if(n.compare(_nodes.at(i)) == 0) {
-				return _nodes.at(i);
-			}
+		stringstream key;
+		key << host << ":" << port;
+				
+		if(_nodes.count(key.str())) {
+			return _nodes[key.str()];
 		}
 		
-		return Node();
+		cout << "Emulator node not present in topology table" << endl;
+		exit(1);
 	};
 	
-	Topology& add(Node n) { _nodes.push_back(n); return *this; };
+	Topology& add(Node n) { 
+		string key = this->getKey(n);
+		_nodes[key] = n;
+		
+		return *this;
+	};
 
 	Topology& disable(Node n) {
 		n.online(false);
@@ -61,16 +74,26 @@ public:
 	
 	string print() {
 		stringstream out;
-		for(unsigned int i = 0; i < _nodes.size(); i++) {
-			Node n = _nodes.at(i);
+		map<string, Node>::iterator it;
+		
+		for(it = _nodes.begin(); it != _nodes.end(); ++it) {
+			Node n = it->second;
 			out <<  n.print() << endl;
 		}
 		
 		return out.str();
 	};
 	
-private:	
-	vector<Node> _nodes;
+private:
+	string getKey(Node n) {
+		stringstream key;
+		string host = n.host();
+		int port = n.port();
+		key << host << ":" << port;
+		return key.str();
+	}
+	
+	map<string, Node> _nodes;
 	
 };
 
