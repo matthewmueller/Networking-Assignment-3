@@ -32,11 +32,11 @@ int main (int argc, char const *argv[])
 		TracePacket sent = TracePacket('t',TTL,sIP,sPort,dIP,dPort);
 		sock.send(dIP,dPort,sent.toString());
 		
-		string received = sock.listen(port);
-		TracePacket tracePacket = TracePacket(received);
+		string buffer = sock.listen(port);
+		TracePacket received = TracePacket(buffer);
 		
-		printf("TracePacket Recieved from: %s on port %d \n", tracePacket.sourceIP().c_str(), tracePacket.sourcePort());
-		if(sent.destinationIP().compare(tracePacket.sourceIP()) == 0)
+		printf("TracePacket Recieved from: %s on port %d \n", received.sourceIP().c_str(), received.sourcePort());
+		if(sent.destinationIP().compare(received.sourceIP()) == 0)
 		{
 			//ROUTE FOUND
 			break;
