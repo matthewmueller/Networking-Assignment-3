@@ -58,7 +58,17 @@ class Node {
 			return *this;
 		}
 		
-		map<string, Node> neighbors() { return _neighbors; }
+		vector<Node> neighbors() {
+			map<string, Node>::iterator it;
+			vector<Node> neighbors;
+			
+			for(it = _neighbors.begin(); it != _neighbors.end(); ++it) {
+				Node n = it->second;
+				neighbors.push_back(n);
+			}
+			
+			return neighbors;
+		}
 
 		int compare(Node n) {
 			if(this->host().compare(n.host()) == 0 && this->port() == n.port()) {
@@ -131,17 +141,17 @@ class Node {
 			return output;
 		}
 		
-		map<string, Node> neighborsFromString(string neighbors) {
-			map<string, Node> output;
+		vector<Node> neighborsFromString(string neighbors) {
+			vector<Node> out;
 			
 			vector<string> nodes = explode(",", neighbors);
 			for(unsigned int i = 0; i < nodes.size(); i++) {
 				string node = nodes.at(i);
 				vector<string>pieces = explode(":", node);
 				Node n = Node(pieces[0], atoi(pieces[1].c_str()), atoi(pieces[2].c_str()));
-				output[pieces[0]] = n;
+				out.push_back(n);
 			}
 			
-			return output;
+			return out;
 		}
 };

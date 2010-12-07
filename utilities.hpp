@@ -253,7 +253,7 @@ long long getMilliTime()
 	return retVal;
 }
 
-int getElapsedTime(long long startTime) {
+long long getElapsedTime(long long startTime) {
 	long long endTime = getMilliTime();
 	return endTime - startTime;
 }
