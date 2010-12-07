@@ -14,7 +14,6 @@ class TracePacket {
 		// *** Constructors *** //
 		TracePacket()
 		{
-			_type = NULL;
 			_TTL = 0;
 			_sourceIP = "";
 			_sourcePort = 0;
