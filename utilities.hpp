@@ -6,6 +6,9 @@
 #include <sstream>
 #include <stdlib.h>
 #include <netdb.h>
+#include <sys/param.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 using namespace std;
 
@@ -172,4 +175,18 @@ string getMyHost() {
 	hostName = hostName.substr(0,strIndex);	
 	
 	return hostName;
+}
+
+string getMyIP()
+{
+	char myHostName[255];
+	myHostName[254] = '\0';
+	gethostname(myHostName,254);
+	string hostName(myHostName);
+	int strIndex = hostName.find_first_of(".");
+	hostName = hostName.substr(0,strIndex);	
+	hostent * record = gethostbyname(hostName.c_str());
+        in_addr * address = (in_addr * )record->h_addr;
+        string IP = inet_ntoa(* address);		
+	return IP;
 }
