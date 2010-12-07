@@ -168,8 +168,7 @@ string colorize(string text = "", string color = "") {
 
 string getMyHost() {
 	char myHostName[255];
-	myHostName[254] = '\0';
-	gethostname(myHostName,254);
+	gethostname(myHostName,255);
 	string hostName(myHostName);
 	int strIndex = hostName.find_first_of(".");
 	hostName = hostName.substr(0,strIndex);	
@@ -179,14 +178,19 @@ string getMyHost() {
 
 string getMyIP()
 {
-	char myHostName[255];
-	myHostName[254] = '\0';
-	gethostname(myHostName,254);
-	string hostName(myHostName);
-	int strIndex = hostName.find_first_of(".");
-	hostName = hostName.substr(0,strIndex);	
-	hostent * record = gethostbyname(hostName.c_str());
-        in_addr * address = (in_addr * )record->h_addr;
-        string IP = inet_ntoa(* address);		
+	char hostname[255];
+	gethostname(hostname, 255);
+		
+	struct hostent *record;
+	
+	if((record = gethostbyname(hostname)) == NULL)
+	{
+		cout << "ERROR: error getting localhost's IP." << endl;
+		exit(1);
+	}
+	
+	in_addr *address = (in_addr *)record->h_addr_list[0];
+	string IP = inet_ntoa(*address);
+
 	return IP;
 }
