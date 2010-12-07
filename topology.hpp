@@ -21,11 +21,11 @@ public:
 			vector<string> nodes = explode(" ", lines.at(i));
 			
 			vector<string> node = explode(",", nodes.at(0));
-			Node me = Node().host(node[0]).port(atoi(node[1].c_str()));
+			Node me = Node().host(node[0]).port(atoi(node[1].c_str())).online(true);
 			
 			for(unsigned int j = 1; j < nodes.size(); j++) {
 				vector<string> node = explode(",", nodes.at(j));
-				Node n = Node().host(node[0]).port(atoi(node[1].c_str()));
+				Node n = Node().host(node[0]).port(atoi(node[1].c_str())).online(true);
 				me.neighbor(n);
 			}
 			
@@ -33,25 +33,10 @@ public:
 		}
 	};	
 	
-	// Refresh the topology by using the Reliable Flooding algorithm
-	bool refresh() {
-		
-		// Node firstNode;
-		// // Get first "online" node in the network
-		// for(int i = 0; i < _nodes.size(); i++) {
-		// 	firstNode = _nodes.at(i);
-		// 	if(firstNode.online()) break;
-		// }
-		// 
-		// firstNode.forwardLSP();
-		// 
-		return true;
-	}
-	
 	Node getNode(string host, int port) {
 		stringstream key;
 		key << host << ":" << port;
-		
+				
 		if(_nodes.count(key.str())) {
 			return _nodes[key.str()];
 		}
