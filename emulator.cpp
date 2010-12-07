@@ -35,7 +35,7 @@ int main (int argc, char const *argv[])
 	filename = getArg("-f", argv);
 	port = atoi(getArg("-p", argv).c_str());
 	host = getMyHost();
-			
+		
 	if(filename.empty()) {
 		cout << "Need to specify a filename" << endl;
 		exit(0);

@@ -51,7 +51,7 @@ public:
 	Node getNode(string host, int port) {
 		stringstream key;
 		key << host << ":" << port;
-				
+		
 		if(_nodes.count(key.str())) {
 			return _nodes[key.str()];
 		}
