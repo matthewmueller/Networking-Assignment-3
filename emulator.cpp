@@ -1,65 +1,22 @@
-#include <string>
-#include <iostream>
-#import "topology.hpp"
-#import "utilities.hpp"
-#import "socket.hpp"
-#import "packet.hpp"
-
-#include <vector>
-
-using namespace std;
-
-Topology topology;
-string filename = "";
-string host = "";
-int port = -1;
-
-void readtopology() {
-	
-	topology = Topology(filename);
-}
-
-void createroutes() {
-	
-}
-
-void forwardpacket() {
-	
-}
-
-int main (int argc, char const *argv[])
+void sendTo(string IPin, int reqport, TracePacket p)
 {
-	// Get args
-	filename = getArg("-f", argv);
-	port = atoi(getArg("-p", argv).c_str());
-	host = getMyHost();
-	
-	if(filename.empty()) {
-		cout << "Need to specify a filename" << endl;
-		exit(0);
-	} else if(port < 1024 || port > 65535) {
-		cout << "Invalid port" << endl;
-		exit(0);
-	}
-	
-	// Parse and generate topology
-	readtopology();
-	cout << getMyHost() << endl;
-	
-	// topology.getNode(host, port)
-	Socket listener = Socket();
-	listener.block(false);
-	
-	while(1) {
-		string response = listener.listen(port);
-		if(!response.empty()) {
-			// Handle
-		}
-		
-		createroutes();
-	}
-	
-	
-	
-	return 0;
+        time_t seconds;
+        //struct hostent *server;
+        //server = gethostbyname(hostn);
+        struct sockaddr_in receiver_addr;
+        int sock_fd;
+
+        //char line[15] = "Hello World!";
+        string pData = p.toString();
+
+        sock_fd = socket(AF_INET,SOCK_DGRAM,IPPROTO_UDP);
+        receiver_addr.sin_family = AF_INET;
+        //bcopy((char *)server->h_addr,(char *)&receiver_addr.sin_addr.s_addr,server->h_length);
+        receiver_addr.sin_addr.s_addr = inet_addr(IPin.c_str());
+        receiver_addr.sin_port = htons(reqport);
+        char *ipadd = inet_ntoa(receiver_addr.sin_addr);
+        seconds = time(NULL);
+        printf("Sending to: %s on port %d at time %ld \n", ipadd,reqport, seconds);
+        sendto(sock_fd, pData.c_str(), 10000, 0,(struct sockaddr*)&receiver_addr,sizeof(receiver_addr));
+        close(sock_fd);
 }
