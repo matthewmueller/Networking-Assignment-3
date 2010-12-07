@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <sstream>
 #include <stdlib.h>
+#import "utilities.hpp"
 
 using namespace std;
 
@@ -23,7 +24,7 @@ class TracePacket {
 		
 		TracePacket(string packet)
 		{
-			vector<string> contents = this->explode(" ", packet);
+			vector<string> contents = explode(" ", packet);
 
 			_type = contents.at(0).c_str()[0];
 			
@@ -85,35 +86,5 @@ class TracePacket {
 		unsigned short _sourcePort;
 		string _destinationIP;
 		unsigned short _destinationPort;
-		
-		vector<string> explode( const string &delimiter, const string &str)
-		{
-		    vector<string> arr;
 
-		    int strleng = str.length();
-		    int delleng = delimiter.length();
-		    if (delleng==0)
-		        return arr;//no change
-
-		    int i=0; 
-		    int k=0;
-		    while( i<strleng )
-		    {
-		        int j=0;
-		        while (i+j<strleng && j<delleng && str[i+j]==delimiter[j])
-		            j++;
-		        if (j==delleng)//found delimiter
-		        {
-		            arr.push_back(  str.substr(k, i-k) );
-		            i+=delleng;
-		            k=i;
-		        }
-		        else
-		        {
-		            i++;
-		        }
-		    }
-		    arr.push_back(  str.substr(k, i-k) );
-		    return arr;
-		}
 };
