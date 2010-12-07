@@ -35,7 +35,7 @@ int main (int argc, char const *argv[])
 	filename = getArg("-f", argv);
 	port = atoi(getArg("-p", argv).c_str());
 	host = getMyHost();
-		
+			
 	if(filename.empty()) {
 		cout << "Need to specify a filename" << endl;
 		exit(0);
@@ -46,7 +46,6 @@ int main (int argc, char const *argv[])
 	
 	// Parse and generate topology
 	readtopology();
-	cout << getMyHost() << endl;
 	
 	Socket listener = Socket();
 	listener.block(false);
@@ -58,6 +57,7 @@ int main (int argc, char const *argv[])
 		}
 		
 		createroutes();
+		
 		cout << "exit out of loop for now" << endl;
 		exit(1);
 	}

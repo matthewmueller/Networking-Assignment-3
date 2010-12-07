@@ -9,6 +9,8 @@
 #include <sys/param.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <time.h>
+#include <sys/timeb.h>
 
 using namespace std;
 
@@ -194,3 +196,66 @@ string getMyIP()
 
 	return IP;
 }
+
+// Return the system time in format HH:MM:SS.mmm where mmm is the milliseconds
+// timeStr - is the array where the return string is stored
+// size - is the size of timeStr
+string getTime()
+{
+	struct timeb systime;
+	ftime(&systime);
+	time_t timet = systime.time;
+	struct tm * timeinfo = localtime (&timet);
+	char timeStr[20];
+	strftime (timeStr,20,"%H:%M:%S",timeinfo);
+
+	int len = strlen(timeStr);
+	int milli = systime.millitm;
+	milli = milli % 1000;  //should be less than thousand already, but just in case
+
+
+    timeStr[len] = '.';
+
+	if (milli < 10)
+	{
+		timeStr[len+1] = '0';
+		timeStr[len+2] = '0';
+		timeStr[len+3] = "0123456789"[milli];
+	}
+
+	else if (milli < 100)
+	{
+		timeStr[len+1] = '0';
+		timeStr[len+2] = "0123456789"[milli / 10];
+		timeStr[len+3] = "0123456789"[milli % 10];
+	}
+
+	else  //  100 <= milli < 1000
+	{
+		timeStr[len+1] = "0123456789"[milli / 100];
+		timeStr[len+2] = "0123456789"[(milli % 100) / 10];
+		timeStr[len+3] = "0123456789"[milli % 10];
+	}
+
+	timeStr[len + 4] = '\0';
+	
+	return string(timeStr);
+}
+
+//return system time in milliseconds
+long long getMilliTime()
+{
+	long long retVal;
+	struct timeb sysTime;
+	ftime(&sysTime);
+	retVal = (long long)sysTime.time * 1000;
+	retVal = retVal + (long long)sysTime.millitm;
+	return retVal;
+}
+
+long long getElapsedTime(long long startTime) {
+	long long endTime = getMilliTime();
+	return endTime - startTime;
+}
+
+
