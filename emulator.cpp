@@ -22,6 +22,7 @@ vector<Node> acksNeededFromNeighbors;
 Timer ackTimer = Timer();
 int port = -1;
 Timer timer = Timer();
+stringstream debug;
 
 void readtopology() {
 	
@@ -49,7 +50,7 @@ void forwardpacket(string response) {
 		HSPacket ack = HSPacket(response);
 		
 		// Debugging information
-		cout << "Recieved ack packet from: " << ack.sourceIP() << "on port: " << ack.sourcePort() << endl;
+		cout << "Recieved ack packet from: " << ack.sourceIP() << " on port: " << ack.sourcePort() << endl;
 		
 		string destIP = ack.sourceIP();
 		int destPort = ack.sourcePort();
@@ -63,17 +64,19 @@ void forwardpacket(string response) {
 		HSPacket r = HSPacket(response);
 		
 		// Debugging information
-		cout << "Recieved response packet from: " << r.sourceIP() << "on port: " << r.sourcePort() << endl;
+		cout << "Recieved response packet from: " << r.sourceIP() << " on port: " << r.sourcePort() << endl;
 		
 		string ackFromIP = r.sourceIP();
 		int ackWithPort = r.sourcePort();
 		
 		stringstream ss;
 		// Remove them from acksNeededFromNeighbors
+
+		cout << debug.str();
 		for(unsigned int i = 0; i < acksNeededFromNeighbors.size(); i++) {
 			Node n = acksNeededFromNeighbors.at(i);
 			if(ackFromIP.compare(n.host()) == 0 && ackWithPort == n.port()) {
-				acksNeededFromNeighbors.erase(acksNeededFromNeighbors.begin()+i-1);
+				acksNeededFromNeighbors.erase(acksNeededFromNeighbors.begin()+i);
 				ss.str("");
 				ss << "A|" << n.host() << ":" << n.port();
 				ackTimer.remove(ss.str());
@@ -82,6 +85,7 @@ void forwardpacket(string response) {
 		
 		if(acksNeededFromNeighbors.empty()) {
 			ackTimer = Timer();
+			cout << "No more acks needed from neighbors! " << endl;
 			// We got all our acks no need to disable a node in our topology. or send in the fire squad (ie. run createroutes)
 		}
 	} 
@@ -130,7 +134,8 @@ int main (int argc, char const *argv[])
 
 		if(timer.isDone("messageNeighbors")) {
 			stringstream ss;
-			vector<Node> acksNeededFromNeighbors = me.neighbors();
+			acksNeededFromNeighbors = me.neighbors();
+
 			for(unsigned int i = 0; i < acksNeededFromNeighbors.size(); i++) {
 				Node n = acksNeededFromNeighbors.at(i);
 				// Create the ack packet
@@ -145,7 +150,7 @@ int main (int argc, char const *argv[])
 				// Send the ack packet to our neighbor
 				sock.send(n.host(), n.port(), ack.toString());
 			}
-			
+			timer.add("messageNeighbors", 1000);
 		}
 		
 		// Check to see if expiration up on acksNeededFromNeighbors
@@ -156,7 +161,10 @@ int main (int argc, char const *argv[])
 			key << "A|" << n.host() << ":" << n.port();
 			
 			if(ackTimer.isDone(key.str())) {
-				// Our time has passed - trigger reliable flooding algorithm
+				// This node did not respond. Disable in topology
+				topology.disable(n);
+
+				// Then trigger reliable flooding algorithm to update node topologies
 				createroutes();
 			}
  		}

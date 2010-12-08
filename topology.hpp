@@ -53,7 +53,9 @@ public:
 	};
 
 	Topology& disable(Node n) {
-		n.online(false);
+		string key = this->getKey(n);
+		Node offline = _nodes[key];
+		offline.online(false);
 		return *this;
 	};
 	
