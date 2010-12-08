@@ -22,11 +22,14 @@ class Timer {
 		
 		bool isDone(string name) {
 			if(this->timeLeft(name) < 0) {
+				_timers.erase(name);
 				return true;
 			} else {
 				return false;
 			}
 		}
+		
+		map<string, map<string, long long > > remainingTimers() { return _timers; }
 		
 		long long timeLeft(string name) {
 			if(_timers.count(name)) {

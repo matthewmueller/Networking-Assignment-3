@@ -11,6 +11,7 @@
 #include <arpa/inet.h>
 #include <time.h>
 #include <sys/timeb.h>
+#include <cstdlib>
 
 using namespace std;
 
@@ -256,6 +257,12 @@ long long getMilliTime()
 long long getElapsedTime(long long startTime) {
 	long long endTime = getMilliTime();
 	return endTime - startTime;
+}
+
+int rand(int start, int end) {
+	srand(getMilliTime());
+	int randomNumber = rand()%(end-start)+start;
+	return randomNumber;
 }
 
 

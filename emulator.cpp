@@ -4,7 +4,7 @@
 #import "topology.hpp"
 #import "utilities.hpp"
 #import "socket.hpp"
-#import "ackpacket.hpp"
+#import "handshakepacket.hpp"
 #import "tracepacket.hpp"
 #import "linkstatepacket.hpp"
 #import "timer.hpp"
@@ -19,6 +19,7 @@ string filename = "";
 string host = "";
 Node me;
 vector<Node> acksNeededFromNeighbors;
+Timer ackTimer = Timer();
 int port = -1;
 Timer timer = Timer();
 
@@ -29,9 +30,9 @@ void readtopology() {
 
 // Refresh the topology by using the Reliable Flooding algorithm
 void createroutes() {
-	acksNeededFromNeighbors = me.neighbors();
+	// acksNeededFromNeighbors = me.neighbors();
 	// Begin the flood starting at my node.
-	cout << "called create routes";
+	cout << "called create routes" << endl;
 	
 }
 
@@ -39,21 +40,55 @@ void forwardpacket(string response) {
 	// It's going to either be a linkstatepacket, tracepacket, or ackpacket
 	vector<string> packParts = explode(" ", response);
 	string type = packParts[0];
-	
+	Socket sock = Socket();
 	if(type.compare("T") == 0) {
 		// trace packet
 		
 	} else if(type.compare("A") == 0) {
 		// ack packet - we know one of our neighbors is online. Should only occur when we run createroutes.
+		HSPacket ack = HSPacket(response);
 		
-		if(acksNeededFromNeighbors.empty()) {
-			// We got all our acks no need to disable a node in our topology. or send in the fire squad (ie. run createroutes)
+		// Debugging information
+		cout << "Recieved ack packet from: " << ack.sourceIP() << "on port: " << ack.sourcePort() << endl;
+		
+		string destIP = ack.sourceIP();
+		int destPort = ack.sourcePort();
+		
+		HSPacket response = HSPacket().type('R').sourceIP(host).sourcePort(port).destinationIP(destIP).destinationPort(destPort);
+		
+		sock.send(destIP, destPort, response.toString());
+		
+	} else if(type.compare("R") == 0) {
+		// Here's we're getting responses from acks
+		HSPacket r = HSPacket(response);
+		
+		// Debugging information
+		cout << "Recieved response packet from: " << r.sourceIP() << "on port: " << r.sourcePort() << endl;
+		
+		string ackFromIP = r.sourceIP();
+		int ackWithPort = r.sourcePort();
+		
+		stringstream ss;
+		// Remove them from acksNeededFromNeighbors
+		for(unsigned int i = 0; i < acksNeededFromNeighbors.size(); i++) {
+			Node n = acksNeededFromNeighbors.at(i);
+			if(ackFromIP.compare(n.host()) == 0 && ackWithPort == n.port()) {
+				acksNeededFromNeighbors.erase(acksNeededFromNeighbors.begin()+i-1);
+				ss.str("");
+				ss << "A|" << n.host() << ":" << n.port();
+				ackTimer.remove(ss.str());
+			}
 		}
 		
-	} else {
+		if(acksNeededFromNeighbors.empty()) {
+			ackTimer = Timer();
+			// We got all our acks no need to disable a node in our topology. or send in the fire squad (ie. run createroutes)
+		}
+	} 
+	else {
 		// Should be a linkstatepacket - forward it on to all neighbors EXCEPT the one we recieved it from
 		// After its sent out we should start receiving ack packets from our neighbors
-		acksNeededFromNeighbors = me.neighbors(); // NOTE: This should not be re
+
 	}
 }
 
@@ -64,7 +99,6 @@ int main (int argc, char const *argv[])
 	port = atoi(getArg("-p", argv).c_str());
 	host = getMyIP();
 	
-		
 	if(filename.empty()) {
 		cout << "Need to specify a filename" << endl;
 		exit(0);
@@ -80,19 +114,53 @@ int main (int argc, char const *argv[])
 	me = topology.getNode(host, port);
 	
 	
-	Socket listener = Socket();
-	listener.block(false);
+	Socket sock = Socket();
+	sock.block(false);
 	
 	// Start the timer.
-	long long startTime = getMilliTime();
-	int elapsedTime = 0;
+	timer.add("messageNeighbors", 1000);
+	timer.add("updateLSP", 20000);
+	
 	while(1) {
-		string response = listener.listen(port);
+		string response = sock.listen(port);
 		if(!response.empty()) {
 			forwardpacket(response);
+			response = string("");
 		}
 
-		elapsedTime = getElapsedTime(startTime);
+		if(timer.isDone("messageNeighbors")) {
+			stringstream ss;
+			vector<Node> acksNeededFromNeighbors = me.neighbors();
+			for(unsigned int i = 0; i < acksNeededFromNeighbors.size(); i++) {
+				Node n = acksNeededFromNeighbors.at(i);
+				// Create the ack packet
+				HSPacket ack = HSPacket().type('A').sourceIP(host).sourcePort(port).destinationIP(n.host()).destinationPort(n.port());
+				
+				// Create the timer
+				ss.str("");
+				ss << "A|" << n.host() << ":" << n.port();
+				// Set the timer
+				ackTimer.add(ss.str(), 500);
+				
+				// Send the ack packet to our neighbor
+				sock.send(n.host(), n.port(), ack.toString());
+			}
+			
+		}
+		
+		// Check to see if expiration up on acksNeededFromNeighbors
+		stringstream key;
+		for(unsigned int i = 0; i < acksNeededFromNeighbors.size(); i++) {
+			Node n = acksNeededFromNeighbors.at(i);
+			key.str("");
+			key << "A|" << n.host() << ":" << n.port();
+			
+			if(ackTimer.isDone(key.str())) {
+				// Our time has passed - trigger reliable flooding algorithm
+				createroutes();
+			}
+ 		}
+		
 		
 		// ---- OK I THINK I FIGURED IT OUT:
 		
@@ -107,11 +175,7 @@ int main (int argc, char const *argv[])
 		*/
 		
 		// Run createroutes on its own say.. 20 seconds
-		if(elapsedTime > 20000) {
-			createroutes();
-			startTime = getMilliTime();
-			exit(1);
-		}
+		
 		
 		// cout << "exit out of loop for now" << endl;
 		// 		exit(1);

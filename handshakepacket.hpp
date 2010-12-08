@@ -8,12 +8,12 @@
 
 using namespace std;
 
-class AckPacket {
+class HSPacket {
 	
 	public:
 		
 		// *** Constructors *** //
-		AckPacket()
+		HSPacket()
 		{
 			_sourceIP = "";
 			_sourcePort = 0;
@@ -21,7 +21,7 @@ class AckPacket {
 			_destinationPort = 0;
 		}
 		
-		AckPacket(string packet)
+		HSPacket(string packet)
 		{
 			vector<string> contents = explode(" ", packet);
 
@@ -35,7 +35,7 @@ class AckPacket {
 			
 		}
 		
-		AckPacket(char type, string sourceIP, int sourcePort,
+		HSPacket(char type, string sourceIP, int sourcePort,
 			string destinationIP, int destinationPort)
 		{
 			_type = type;
@@ -46,19 +46,19 @@ class AckPacket {
 		}
 		
 		// *** Getters & Setters *** //
-		AckPacket& type(char type) { _type = type; return *this; }
+		HSPacket& type(char type) { _type = type; return *this; }
 		char type() { return _type; }
 		
-		AckPacket& sourceIP(string sourceIP) { _sourceIP = sourceIP; return *this; }
+		HSPacket& sourceIP(string sourceIP) { _sourceIP = sourceIP; return *this; }
 		string sourceIP() { return _sourceIP; }
 		
-		AckPacket& sourcePort(unsigned short sourcePort) { _sourcePort = sourcePort; return *this; }
+		HSPacket& sourcePort(unsigned short sourcePort) { _sourcePort = sourcePort; return *this; }
 		unsigned short sourcePort() { return _sourcePort; }
 		
-		AckPacket& destinationIP(string destinationIP) { _destinationIP = destinationIP; return *this; }
+		HSPacket& destinationIP(string destinationIP) { _destinationIP = destinationIP; return *this; }
 		string destinationIP() { return _destinationIP; }
 		
-		AckPacket& destinationPort(unsigned short destinationPort) { _destinationPort = destinationPort; return *this; }
+		HSPacket& destinationPort(unsigned short destinationPort) { _destinationPort = destinationPort; return *this; }
 		unsigned short destinationPort() { return _destinationPort; }
 		
 		// *** Public Methods *** //
