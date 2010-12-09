@@ -115,7 +115,7 @@ int main (int argc, char const *argv[])
 	readtopology();
 	
 	// Get my Node representation from Topology
-	me = topology.getNode(host, port);
+	me = topology.get(host, port);
 	
 	
 	Socket sock = Socket();
