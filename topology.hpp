@@ -86,6 +86,12 @@ public:
 		return *this;
 	};
 	
+	Topology& enable(string host, int port) {
+		Node &n = this->get(host, port);
+		this->enable(n);
+		return *this;
+	}
+	
 	Topology& enable(Node n) {
 		string key = this->getKey(n);
 		Node &node = _nodes[key];
@@ -95,37 +101,43 @@ public:
 		return *this;
 	}
 		
-	string neighborsToString(Node n) {
+	string getNeighborsForLSP(Node n) {
 		stringstream out;
 		
 		vector<Node> _neighbors = n.neighbors();
-		
+
 		for(unsigned int i = 0; i < _neighbors.size(); i++) {
 			Node n = _neighbors.at(i);
 			n = this->get(n);
 			out << n.host() << ":" << n.port() << ":" << n.online();
-			out << ",";
+			out << ",";				
 		}
-		string output = out.str();
 		
-		output.erase(output.size()-1);
+		string output = out.str();
+		if(!output.empty()) {
+			output = output.erase(output.size()-1);
+		}
 		
 		return output;
 	}
 	
-	// vector<Node> neighborsFromString(string neighbors) {
-	// 	vector<Node> out;
-	// 	
-	// 	vector<string> nodes = explode(",", neighbors);
-	// 	for(unsigned int i = 0; i < nodes.size(); i++) {
-	// 		string node = nodes.at(i);
-	// 		vector<string>pieces = explode(":", node);
-	// 		Node n = Node(pieces[0], atoi(pieces[1].c_str()), atoi(pieces[2].c_str()));
-	// 		out.push_back(n);
-	// 	}
-	// 	
-	// 	return out;
-	// }
+	vector<Node> neighborsFromString(string neighbors) {
+		vector<Node> out;
+		vector<string> nodes = explode(",", neighbors);
+
+		for(unsigned int i = 0; i < nodes.size(); i++) {
+			string node = nodes.at(i);
+			vector<string>pieces = explode(":", node);
+
+			if(!pieces[0].empty() && !pieces[1].empty()) {
+				Node n = Node(pieces[0], atoi(pieces[1].c_str()), atoi(pieces[2].c_str()));
+				out.push_back(n);		
+			}
+			
+		}
+		
+		return out;
+	}
 	
 	string print() {
 		stringstream out;

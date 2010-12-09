@@ -25,7 +25,7 @@ class LSPacket {
 			vector<string> contents = explode(" ", packet);
 		
 			_id = contents.at(0);
-			// _neighbors = this->neighborsFromString(contents.at(1));
+			_neighbors = contents.at(1);
 			_sequenceNumber = atoi(contents.at(2).c_str());
 			_lifetime = atoi(contents.at(3).c_str());
 		}
@@ -48,8 +48,8 @@ class LSPacket {
 		LSPacket& sequenceNumber(int sequenceNumber) { _sequenceNumber = sequenceNumber; return *this; }
 		int sequenceNumber() { return _sequenceNumber; }
 		
-		LSPacket& lifetime(int lifetime) { _lifetime = lifetime; return *this; }
-		int lifetime() { return _lifetime; }
+		LSPacket& TTL(int lifetime) { _lifetime = lifetime; return *this; }
+		int TTL() { return _lifetime; }
 		
 		// *** Public Methods *** //
 		string toString() 
