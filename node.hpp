@@ -127,34 +127,4 @@ class Node {
 			stringstream key;
 			return this->getKey(n.host(), n.port());
 		}
-		
-		string neighborsToString() {
-			stringstream out;
-			map<string, Node>::iterator it;
-			
-			for(it = _neighbors.begin(); it != _neighbors.end(); ++it) {
-				Node n = it->second;
-				out << n.host() << ":" << n.port() << ":" << n.online();
-				out << ",";
-			}
-			string output = out.str();
-			
-			output.erase(output.size()-1);
-			
-			return output;
-		}
-		
-		vector<Node> neighborsFromString(string neighbors) {
-			vector<Node> out;
-			
-			vector<string> nodes = explode(",", neighbors);
-			for(unsigned int i = 0; i < nodes.size(); i++) {
-				string node = nodes.at(i);
-				vector<string>pieces = explode(":", node);
-				Node n = Node(pieces[0], atoi(pieces[1].c_str()), atoi(pieces[2].c_str()));
-				out.push_back(n);
-			}
-			
-			return out;
-		}
 };
