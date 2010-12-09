@@ -24,16 +24,38 @@ int port = -1;
 Timer timer = Timer();
 stringstream debug;
 
+
+string toID(Node n) {
+	stringstream ss; 
+	ss << n.host() << ":" << n.port();
+	
+	return ss.str();
+}
+
+map<string, string> fromID(string ID) {
+	map<string, string> out;
+	vector<string> parts = explode(":", ID);
+	out["host"] = parts[0];
+	out["port"] = parts[1];
+	
+	return out;
+}
+
 void readtopology() {
 	
 	topology = Topology(filename);
 }
 
 // Refresh the topology by using the Reliable Flooding algorithm
-void createroutes() {
+void createroutes(Node n) {
 	// acksNeededFromNeighbors = me.neighbors();
 	// Begin the flood starting at my node.
 	cout << "called create routes" << endl;
+	string ID = toID(n);
+	string neighbors = topology.neighborsToString(n);
+	cout << neighbors << endl;
+	// LSPacket LSP = LSPacket().id(ID).
+	
 	
 }
 
@@ -95,6 +117,7 @@ void forwardpacket(string response) {
 
 	}
 }
+
 
 int main (int argc, char const *argv[])
 {
@@ -165,7 +188,7 @@ int main (int argc, char const *argv[])
 				topology.disable(n);
 
 				// Then trigger reliable flooding algorithm to update node topologies
-				createroutes();
+				createroutes(n);
 			}
  		}
 		
