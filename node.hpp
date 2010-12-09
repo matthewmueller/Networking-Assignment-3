@@ -117,12 +117,15 @@ class Node {
 		map<string, Node> _neighbors;
 		map<string, LSPacket> _lastPacket;
 		
-		string getKey(Node n) {
+		string getKey(string host, int port) {
 			stringstream key;
-			string host = n.host();
-			int port = n.port();
 			key << host << ":" << port;
 			return key.str();
+		}
+		
+		string getKey(Node n) {
+			stringstream key;
+			return this->getKey(n.host(), n.port());
 		}
 		
 		string neighborsToString() {
